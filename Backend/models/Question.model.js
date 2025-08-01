@@ -14,6 +14,10 @@ const questionSchema = new mongoose.Schema({
     isPinned: {
         type: Boolean,
         default: false,
+    },
+    note: {
+        type: String,
+        default: '',
     }
 }, {timestamps: true});
 

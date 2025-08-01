@@ -1,10 +1,17 @@
 import express from 'express';
 import { configDotenv } from 'dotenv';
+import { fileURLToPath } from 'url';
 import cors from 'cors';
 import path from 'path';
 import connectDB from "./config/db.js";
+
 import authRoutes from './routes/auth.route.js';
-import { fileURLToPath } from 'url';
+import sessionRoutes from './routes/session.route.js';
+import questionRoutes from './routes/question.route.js';
+
+import { protect } from './middleware/auth.middleware.js';
+
+import { generateInterviewQuestions, generateConceptExplanation } from './controllers/ai.controller.js';
 
 configDotenv({quiet: true});
 
@@ -49,11 +56,11 @@ app.get('/uploads/:filename', (req, res) => {
 
 //Routes
 app.use('/api/auth', authRoutes)
-// app.use('/api/sessions', sessionRoutes)
-// app.use('/api/questions', questionRoutes)
+app.use('/api/sessions', sessionRoutes)
+app.use('/api/questions', questionRoutes)
 
-// app.use('/api/ai/generate-questions',protected, generateInterviewQuestions);
-// app.use('/api/ai/generate-explanation', protected, generateConceptExplanation);
+app.use('/api/ai/generate-questions',protect, generateInterviewQuestions);
+app.use('/api/ai/generate-explanation', protect, generateConceptExplanation);
 
 
 //Connect to the database
